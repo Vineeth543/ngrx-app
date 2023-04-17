@@ -24,9 +24,9 @@ export class RegisterComponent implements OnInit {
 
   initializeForm(): void {
     this.registerForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', Validators.required],
+      username: ['', [Validators.required, Validators.minLength(4)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
@@ -34,10 +34,30 @@ export class RegisterComponent implements OnInit {
     this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
   }
 
+  showFormErrors(field: string): string | void {
+    const targetField = this.registerForm.get(field);
+    if (targetField?.touched && !targetField.valid) {
+      if (targetField.errors?.['email']) {
+        return 'Email is invalid';
+      }
+      if (targetField.errors?.['required']) {
+        return field[0].toUpperCase() + field.slice(1) + ' is required';
+      }
+      if (targetField.errors?.['minlength'] && field === 'username') {
+        return 'Username must atleast have 4 characters';
+      }
+      if (targetField.errors?.['minlength'] && field === 'password') {
+        return 'Password must atleast have 8 characters';
+      }
+    }
+  }
+
   onSubmit(): void {
+    if (this.registerForm.invalid) return;
     const request: RegisterRequestInterface = {
       user: this.registerForm.value,
     };
     this.store.dispatch(registerAction({ request }));
+    this.registerForm.reset();
   }
 }

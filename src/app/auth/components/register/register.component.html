@@ -16,6 +16,9 @@
               formControlName="username"
             />
           </fieldset>
+          <div *ngIf="showFormErrors('username')" class="alert alert-danger">
+            {{ showFormErrors("username") }}
+          </div>
           <fieldset class="form-group">
             <input
               type="email"
@@ -24,6 +27,9 @@
               formControlName="email"
             />
           </fieldset>
+          <div *ngIf="showFormErrors('email')" class="alert alert-danger">
+            {{ showFormErrors("email") }}
+          </div>
           <fieldset class="form-group">
             <input
               type="password"
@@ -32,6 +38,9 @@
               formControlName="password"
             />
           </fieldset>
+          <div *ngIf="showFormErrors('password')" class="alert alert-danger">
+            {{ showFormErrors("password") }}
+          </div>
           <button
             class="btn btn-lg btn-primary pull-xs-right"
             [disabled]="registerForm.invalid && !(isSubmitting$ | async)"
