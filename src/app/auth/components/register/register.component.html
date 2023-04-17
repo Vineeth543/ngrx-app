@@ -5,7 +5,10 @@
       <p class="text-xs-center">
         <a [routerLink]="['/login']">Already have an account.?</a>
       </p>
-      <p>Backend errors here</p>
+      <app-backend-error-messages
+        *ngIf="backendErrors$ | async"
+        [backendErrors]="backendErrors$ | async"
+      ></app-backend-error-messages>
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <fieldset>
           <fieldset class="form-group">
@@ -43,7 +46,7 @@
           </div>
           <button
             class="btn btn-lg btn-primary pull-xs-right"
-            [disabled]="registerForm.invalid && !(isSubmitting$ | async)"
+            [disabled]="isSubmitting$ | async"
           >
             Sign Up
           </button>

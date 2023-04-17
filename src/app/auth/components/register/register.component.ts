@@ -1,9 +1,13 @@
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
-import { isSubmittingSelector } from '../../store/selectors';
-import { registerAction } from '../../store/actions/register.action';
+import {
+  isSubmittingSelector,
+  validationErrorsSelector,
+} from '../../store/selectors';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { registerAction } from '../../store/actions/register.action';
+import { BackendErrorsInterface } from '../../types/backendErrors.interface';
 import { RegisterRequestInterface } from '../../types/registerRequest.interface';
 
 @Component({
@@ -14,6 +18,7 @@ import { RegisterRequestInterface } from '../../types/registerRequest.interface'
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   isSubmitting$!: Observable<boolean>;
+  backendErrors$!: Observable<BackendErrorsInterface | null>;
 
   constructor(private formBuilder: FormBuilder, private store: Store) {}
 
@@ -32,6 +37,7 @@ export class RegisterComponent implements OnInit {
 
   initializeValues(): void {
     this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
+    this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
   }
 
   showFormErrors(field: string): string | void {
@@ -53,11 +59,9 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.registerForm.invalid) return;
     const request: RegisterRequestInterface = {
       user: this.registerForm.value,
     };
     this.store.dispatch(registerAction({ request }));
-    this.registerForm.reset();
   }
 }
