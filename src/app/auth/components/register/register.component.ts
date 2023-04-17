@@ -1,9 +1,10 @@
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
-import { registerAction } from '../../store/actions';
 import { isSubmittingSelector } from '../../store/selectors';
+import { registerAction } from '../../store/actions/register.action';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RegisterRequestInterface } from '../../types/registerRequest.interface';
 
 @Component({
   selector: 'app-register',
@@ -34,6 +35,9 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.store.dispatch(registerAction(this.registerForm.value));
+    const request: RegisterRequestInterface = {
+      user: this.registerForm.value,
+    };
+    this.store.dispatch(registerAction({ request }));
   }
 }
