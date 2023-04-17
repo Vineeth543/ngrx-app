@@ -1,6 +1,8 @@
-import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Store, select } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { registerAction } from '../../store/actions';
+import { isSubmittingSelector } from '../../store/selectors';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -10,11 +12,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
+  isSubmitting$!: Observable<boolean>;
 
   constructor(private formBuilder: FormBuilder, private store: Store) {}
 
   ngOnInit(): void {
     this.initializeForm();
+    this.initializeValues();
   }
 
   initializeForm(): void {
@@ -23,6 +27,10 @@ export class RegisterComponent implements OnInit {
       email: ['', Validators.required],
       password: ['', Validators.required],
     });
+  }
+
+  initializeValues(): void {
+    this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
   }
 
   onSubmit(): void {
