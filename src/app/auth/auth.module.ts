@@ -9,10 +9,7 @@ import { RegisterEffect } from './store/effects/register.effect';
 import { EffectsModule } from '@ngrx/effects';
 import { BackendErrorMessagesModule } from '../shared/modules/backendErrorMessages/backendErrorMessages.module';
 
-const routes: Routes = [
-  { path: '', redirectTo: 'register', pathMatch: 'full' },
-  { path: 'register', component: RegisterComponent },
-];
+const routes: Routes = [{ path: 'register', component: RegisterComponent }];
 
 @NgModule({
   imports: [
